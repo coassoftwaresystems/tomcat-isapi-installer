@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+  <Product Id="E8141E92-4675-40E9-8EE4-BA39A2ADE9FB" Name="Tomcat Isapi redirector" Language="1033" Version="$(var.Version).$(var.BuildNumber)" Manufacturer="Apache Software Foundation" UpgradeCode="62904776-d59f-4c2b-8732-f44119e410e1">
+    <Package Keywords="Installer" Description="Tomcat Isapi redirector $(var.Version).$(var.BuildNumber) Installer" InstallerVersion="200" Compressed="yes" 
+             Comments="Tomcat Isapi redirector version $(var.Version).$(var.BuildNumber)" 
+             Manufacturer="Apache Software Foundation" Platform="$(var.Platform)" InstallScope="perMachine" InstallPrivileges="elevated" />
+
+    <Property Id="NEWERVERSIONDETECTED" Secure="yes" />
+    <Upgrade Id="62904776-d59f-4c2b-8732-f44119e410e1">
+      <UpgradeVersion Minimum="$(var.Version).$(var.BuildNumber)" Property="NEWERVERSIONDETECTED" OnlyDetect="yes" IncludeMinimum="yes" />
+      <UpgradeVersion OnlyDetect="no" Property="ISAPIREDIRECT_UPGRADE" Minimum="1.0.0.0" IncludeMinimum="yes" Maximum="$(var.Version).$(var.BuildNumber)" />
+    </Upgrade>
+
+    <!-- $(var.SolutionDir)\IsapiRedirect\ -->
+    <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="artwork\TopBanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="artwork\SideBanner.bmp" />
+
+    <Icon Id="tomcat.ico" SourceFile="tomcat.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="tomcat.ico" />
+
+    <Condition Message="Windows 2000 or higher is required">
+      VersionNT >= 500
+    </Condition>
+
+    <Condition Message="A later version of [ProductName] is already installed.">
+      NOT NEWERVERSIONDETECTED
+    </Condition>
+
+    <Media Id="1" Cabinet="IsapiRedirect.cab" EmbedCab="yes" />
+
+    <DirectoryRef Id="TARGETDIR" />
+
+    <InstallExecuteSequence>      
+      <RemoveExistingProducts Before="InstallInitialize" Overridable="yes">NOT Installed</RemoveExistingProducts>
+    </InstallExecuteSequence>
+    
+    <UIRef Id="WixUI_Tomcat" />
+
+    <Feature Id="IsapiRedirect" Title="Tomcat Isapi Redirector" Display="expand" Level="1" ConfigurableDirectory="INSTALLLOCATION" AllowAdvertise="no" Absent="disallow">
+      <ComponentRef Id="License" />
+      <ComponentRef Id="IsapiRedirectDll" />
+      <ComponentRef Id="ConfigFiles" />
+      <ComponentRef Id="RegistrySettings" />
+
+      <Feature Id="LogDirectory" Title="Log directory" ConfigurableDirectory="LOGLOCATION" AllowAdvertise="no" Level="1" Absent="disallow">
+        <ComponentRef Id="RegistrySettingsLog" />
+        <ComponentRef Id="LogDirectory" />
+      </Feature>
+
+      <Feature Id="AutoConfigureIIS" Title="Configure IIS default website" Level="1" AllowAdvertise="no">
+        <ComponentRef Id="IISConfiguration" />
+      </Feature>
+      
+    </Feature>
+
+  </Product>
+</Wix>

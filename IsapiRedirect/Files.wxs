@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+  <Fragment>
+    <?if $(var.Platform) = "x86" ?>
+    <?define ProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?else?>
+    <?define ProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?endif?>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.ProgramFilesFolder)">
+        <Directory Id="ApacheSoftwareFoundation" Name="Apache Software Foundation">
+          <Directory Id="INSTALLLOCATION" Name="Tomcat Isapi Redirect $(var.Version)">
+
+            <Component Id="License" Guid="D78E916B-7C18-4C2F-B0EE-C4EDA1D72DDC">
+              <File Id="LicenseRtf" Name="License.rtf" DiskId="1" Source="License.rtf" />
+            </Component>
+
+            <?if $(var.Platform) = x86 ?>
+            <Component Id="IsapiRedirectDll" Guid="DC27CC21-0CE2-498E-8C1B-E89E59D715EA">
+              <File Id="IsapiRedirectDllx86File" Name="isapi_redirect.dll" Source="..\TomcatRedist\x86\isapi_redirect-$(var.Version).dll" />
+              <File Id="IsapRedirectllx86LICENSE" Name="LICENSE" Source="..\TomcatRedist\x86\LICENSE" />
+              <File Id="IsapRedirectllx86NOTICE" Name="NOTICE" Source="..\TomcatRedist\x86\NOTICE" />
+              <File Id="IsapRedirectllx86README" Name="README" Source="..\TomcatRedist\x86\README" />
+            </Component>
+            <?elseif $(var.Platform) = x64 ?>
+            <Component Id="IsapiRedirectDll" Guid="280A8880-7C80-4B14-B77A-B044F88A57C7" Win64="yes">
+              <File Id="IsapiRedirectDllx64File" Name="isapi_redirect.dll" Source="..\TomcatRedist\x86_64\isapi_redirect-$(var.Version).dll" />
+              <File Id="IsapRedirectllx64LICENSE" Name="LICENSE" Source="..\TomcatRedist\x86_64\LICENSE" />
+              <File Id="IsapRedirectllx64NOTICE" Name="NOTICE" Source="..\TomcatRedist\x86_64\NOTICE" />
+              <File Id="IsapRedirectllx64README" Name="README" Source="..\TomcatRedist\x86_64\README" />
+            </Component>
+            <?endif?>
+
+            <Component Id="IISConfiguration" Guid="8E81C8F7-DEC9-4482-8C9E-D61966340D03">
+              <CreateFolder />
+              <iis:WebSite Id="DefaultWebSite" Description="DefaultWebsite" Directory="INSTALLLOCATION">
+                <iis:WebAddress Id="DefaultWebAddress" IP="AllUnassigned" Port="80" />
+                <?if $(var.Platform) = x86 ?>
+                <iis:WebFilter Description="TomcatIsapi" Name="TomcatIsapi" Id="TomcatIsapi" Path="[IsapiRedirectDllx86File]" />
+                <?elseif $(var.Platform) = x64 ?>
+                <iis:WebFilter Description="TomcatIsapi" Name="TomcatIsapi" Id="TomcatIsapi" Path="[IsapiRedirectDllx64File]" />
+                <?endif?>
+                <iis:WebVirtualDir Id="jakartaWebDir" Alias="jakarta" Directory="INSTALLLOCATION">
+                  <iis:WebDirProperties Id="jakartaWebDirProperties" Execute="yes" Read="yes" />
+                </iis:WebVirtualDir>
+              </iis:WebSite>
+              <?if $(var.Platform) = x86 ?>
+              <iis:WebServiceExtension Id="TomcatService" Description="tomcat" File="[IsapiRedirectDllx86File]" UIDeletable="yes" Allow="yes" />
+              <?elseif $(var.Platform) = x64 ?>
+              <iis:WebServiceExtension Id="TomcatService" Description="tomcat" File="[IsapiRedirectDllx64File]" UIDeletable="yes" Allow="yes" />
+              <?endif?>
+            </Component>
+
+            <Component Id="RegistrySettings" Guid="8A3E5187-2D8B-412B-8B6F-BE0AEB4E92F4">
+              <RegistryKey Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Jakarta Isapi Redirector">
+                <RegistryKey Key="1.0">
+                  <RegistryValue Id="value_extension_uri" Name="extension_uri" Type="string" Value="/jakarta/isapi_redirect.dll" />
+                  <RegistryValue Id="value_log_level" Name="log_level" Type="string" Value="error" />
+                  <RegistryValue Id="value_worker_file" Name="worker_file" Type="string" Value="[CONFIGLOCATION]workers.properties" />
+                  <RegistryValue Id="value_worker_mount_file" Name="worker_mount_file" Type="string" Value="[CONFIGLOCATION]uriworkermap.properties" />
+                  <RegistryValue Id="value_woker_mount_reload" Name="worker_mount_reload" Type="integer" Value="300" />
+                  <RegistryValue Id="value_enable_chunked_encoding" Name="enable_chunked_encoding" Type="integer" Value="0" />
+                </RegistryKey>
+              </RegistryKey>
+            </Component>
+
+            <Directory Id="CONFIGLOCATION" Name="conf">
+              <Component Id="ConfigFiles" Guid="6D858D53-7DF2-4351-BB16-65226B8F47FD">
+                <File Id="WorkersPropertiesFile" Name="workers.properties" Source="workers.properties" />
+                <File Id="UriWorkerMapPropertiesFile" Name="uriworkermap.properties" Source="uriworkermap.properties" />
+                <File Id="IsapiRedirectPropertiesFile" Name="isapi_redirect.properties" Source="isapi_redirect.properties" />
+              </Component>
+            </Directory>
+
+            <Directory Id="LOGLOCATION" Name="logs">
+
+              <Component Id="LogDirectory" Guid="88E404AC-33BC-4FF8-907D-05F59C6417D4">
+                <CreateFolder />
+              </Component>
+
+              <Component Id="RegistrySettingsLog" Guid="00EBCB11-4457-436C-AB85-469E547BF669">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Jakarta Isapi Redirector\1.0">
+                  <RegistryValue Id="value_log_file" Name="log_file" Type="string" Value="[LOGLOCATION]isapi_redirect.log" />
+                </RegistryKey>
+              </Component>
+
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+  </Fragment>
+</Wix>

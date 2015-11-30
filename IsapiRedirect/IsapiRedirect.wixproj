@@ -13,36 +13,36 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Debug;Version=1.2.41;BuildNumber=0</DefineConstants>
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Version=1.2.41;BuildNumber=0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ia64' ">
-    <DefineConstants>Debug;Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Debug;Version=1.2.41;BuildNumber=0</DefineConstants>
     <WixVariables>
     </WixVariables>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ia64' ">
-    <DefineConstants>Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Version=1.2.41;BuildNumber=0</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug;Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Debug;Version=1.2.41;BuildNumber=0</DefineConstants>
     <WixVariables>
     </WixVariables>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <DefineConstants>Version=1.2.40;BuildNumber=1</DefineConstants>
+    <DefineConstants>Version=1.2.41;BuildNumber=0</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
